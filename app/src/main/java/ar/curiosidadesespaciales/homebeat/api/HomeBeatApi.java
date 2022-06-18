@@ -14,6 +14,7 @@ public interface HomeBeatApi {
 
     @RequestMapping(value = "/beats", produces = {"application/json"}, method = RequestMethod.GET)
     ResponseEntity<BeatPageDto> beatsGet(
+            @RequestParam(value = "tz", required = false) Integer tzOffsetHours,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "size", required = false) Integer size);
 }

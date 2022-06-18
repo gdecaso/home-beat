@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class HomeBeatApiController implements HomeBeatApi {
@@ -36,10 +39,18 @@ public class HomeBeatApiController implements HomeBeatApi {
     }
 
     @Override
-    public ResponseEntity<BeatPageDto> beatsGet(Integer pageOrNull, Integer sizeOrNull) {
+    public ResponseEntity<BeatPageDto> beatsGet(Integer tzOffsetHours, Integer pageOrNull, Integer sizeOrNull) {
+        ZoneId zone = calculateZone(tzOffsetHours);
         int page = pageOrNull != null ? pageOrNull : DEFAULT_PAGE;
         int size = sizeOrNull != null ? sizeOrNull : DEFAULT_SIZE;
-        List<BeatEntry> beatEntries = service.listBeats(page, size);
+        List<BeatEntry> beatEntries = service.listBeats(zone, page, size);
         return ResponseEntity.ok(mapper.modelToApis(beatEntries, page, size));
+    }
+
+    private ZoneId calculateZone(Integer tzOffsetHours) {
+        return Optional.ofNullable(tzOffsetHours)
+                .map(ZoneOffset::ofHours)
+                .map(offset -> ZoneId.ofOffset("", offset))
+                .orElse(ZoneId.systemDefault());
     }
 }
