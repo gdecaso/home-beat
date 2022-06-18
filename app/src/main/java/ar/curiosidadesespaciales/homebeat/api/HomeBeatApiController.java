@@ -29,8 +29,9 @@ public class HomeBeatApiController implements HomeBeatApi {
 
     @Override
     public ResponseEntity<String> beatsPost() {
-        service.beat(ZonedDateTime.now());
-        return ResponseEntity.ok("Beat received");
+        ZonedDateTime now = ZonedDateTime.now();
+        service.beat(now);
+        return ResponseEntity.ok(String.format("Beat received at %s", now));
     }
 
     @Override
