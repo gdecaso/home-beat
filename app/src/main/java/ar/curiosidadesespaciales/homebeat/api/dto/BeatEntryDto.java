@@ -1,11 +1,11 @@
-package ar.curiosidadesespaciales.homebeat.api;
+package ar.curiosidadesespaciales.homebeat.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;
 
 public class BeatEntryDto {
-    @JsonProperty("dateTime")
+    @JsonProperty
     private final ZonedDateTime dateTime;
 
     public BeatEntryDto(ZonedDateTime dateTime) {

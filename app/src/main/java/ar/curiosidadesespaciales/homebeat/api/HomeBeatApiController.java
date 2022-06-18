@@ -1,5 +1,6 @@
 package ar.curiosidadesespaciales.homebeat.api;
 
+import ar.curiosidadesespaciales.homebeat.api.dto.BeatPageDto;
 import ar.curiosidadesespaciales.homebeat.data.BeatEntry;
 import ar.curiosidadesespaciales.homebeat.service.HomeBeatService;
 import org.slf4j.Logger;
@@ -19,10 +20,10 @@ public class HomeBeatApiController implements HomeBeatApi {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final HomeBeatService service;
-    private final BeatEntryMapper mapper;
+    private final Mapper mapper;
 
     @Autowired
-    public HomeBeatApiController(HomeBeatService service, BeatEntryMapper mapper) {
+    public HomeBeatApiController(HomeBeatService service, Mapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
@@ -35,10 +36,10 @@ public class HomeBeatApiController implements HomeBeatApi {
     }
 
     @Override
-    public ResponseEntity<List<BeatEntryDto>> beatsGet(Integer pageOrNull, Integer sizeOrNull) {
+    public ResponseEntity<BeatPageDto> beatsGet(Integer pageOrNull, Integer sizeOrNull) {
         int page = pageOrNull != null ? pageOrNull : DEFAULT_PAGE;
         int size = sizeOrNull != null ? sizeOrNull : DEFAULT_SIZE;
         List<BeatEntry> beatEntries = service.listBeats(page, size);
-        return ResponseEntity.ok(mapper.modelToApis(beatEntries));
+        return ResponseEntity.ok(mapper.modelToApis(beatEntries, page, size));
     }
 }
